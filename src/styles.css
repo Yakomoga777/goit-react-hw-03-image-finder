@@ -113,10 +113,7 @@ img {
   padding-right: 4px;
 }
 
-.SearchForm-input::placeholder {
-  font: inherit;
-  font-size: 18px;
-}
+.SearchForm-input
 
 /*
  * Стили компонента ImageGallery
