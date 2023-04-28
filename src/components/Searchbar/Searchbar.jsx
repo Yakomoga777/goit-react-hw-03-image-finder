@@ -16,13 +16,19 @@ export class Searchbar extends Component {
     this.setState({ search: evt.target.value });
   };
 
+  onSubmit = evt => {
+    const { search } = this.state;
+    evt.preventDefault();
+    this.props.onSubmit(search);
+  };
+
   render() {
     const { search } = this.state;
     console.log(this.state);
     return (
       <>
         <StyleSearchbar>
-          <StyleSearchForm>
+          <StyleSearchForm onSubmit={this.onSubmit}>
             <StyleButton type="submit">
               <StyledButtonLable>Search</StyledButtonLable>
             </StyleButton>
