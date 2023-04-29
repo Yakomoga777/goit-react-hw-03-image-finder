@@ -1,3 +1,4 @@
+import { Button } from 'components/Button/Button';
 import React, { Component } from 'react';
 import {
   StyleSearchbar,
@@ -22,9 +23,18 @@ export class Searchbar extends Component {
     this.props.onSubmit(search);
   };
 
+  onLoadMoreClick = search => {
+    search = this.state.search;
+    console.log(search);
+    this.props.onLoagMoreClick(search);
+    // this.fetchImages(search);
+    // this.setState({ page: 2 });
+    console.log('Load more');
+  };
+
   render() {
     const { search } = this.state;
-    console.log(this.state);
+    // console.log(this.state);
     return (
       <>
         <StyleSearchbar>
@@ -43,6 +53,7 @@ export class Searchbar extends Component {
             />
           </StyleSearchForm>
         </StyleSearchbar>
+        <Button onClick={this.onLoadMoreClick} />
       </>
     );
   }
