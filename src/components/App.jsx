@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { GlobalStyle } from './Styles/GlobalStyle/GlobalStyle';
 import { Loader } from './Loader/Loader';
-import { Button } from './Button/Button';
+// import { Button } from './Button/Button';
 
 axios.defaults.baseURL = 'https://pixabay.com/api';
 const KEY_API = '34395621-a4ae5341feaa95111ecdda581';
