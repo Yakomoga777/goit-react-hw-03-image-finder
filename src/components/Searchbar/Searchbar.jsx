@@ -1,4 +1,6 @@
 import { Button } from 'components/Button/Button';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { StyledImageGallery } from 'components/ImageGallery/ImageGallery.styled';
 import React, { Component } from 'react';
 import {
   StyleSearchbar,
@@ -36,6 +38,8 @@ export class Searchbar extends Component {
   render() {
     const { search } = this.state;
     // console.log(this.state);
+    const { items } = this.props;
+    console.log(items);
     return (
       <>
         <StyleSearchbar>
@@ -54,6 +58,8 @@ export class Searchbar extends Component {
             />
           </StyleSearchForm>
         </StyleSearchbar>
+
+        <ImageGallery items={items} />
         <Button onClick={this.onLoadMoreClick} />
       </>
     );
