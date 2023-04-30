@@ -20,17 +20,15 @@ export class App extends Component {
     page: 1,
     isLoading: false,
     error: null,
+    showLoadMoreBtn: false,
   };
 
   async componentDidMount() {
     console.log('Змонтовано');
-    // this.onLoagMoreClick();
-    // this.fetchImages();
   }
 
   async componentDidUpdate() {
     console.log('Апдейт');
-    // this.fetchImages();
   }
 
   fetchImages = async search => {
@@ -39,12 +37,25 @@ export class App extends Component {
     }
     try {
       this.setState({ isLoading: true });
-      const response = await axios.get(
+      let response = await axios.get(
         `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=${1}`
       );
+
       console.log('Відправили пошуковий запит');
 
-      console.log('Отримали відповідь -', response.data.hits);
+      console.log('Отримали відповідь -', response.data);
+      // console.log(Math.floor(response.data.totalHits / perPage));
+
+      // this.setState(prevState => {
+      //   if (
+      //     Math.floor(response.data.totalHits / perPage) >
+      //     prevState.page + 1
+      //   ) {
+      //     this.setState({
+      //       showLoadMoreBtn: true,
+      //     });
+      //   }
+      // });
 
       this.setState({
         images: response.data.hits,
@@ -73,6 +84,16 @@ export class App extends Component {
         }`
       );
 
+      // if (response.data.totalHits > this.state.page * perPage) {
+      //   this.setState({
+      //     showLoadMoreBtn: true,
+      //   });
+      // } else {
+      //   this.setState({
+      //     showLoadMoreBtn: false,
+      //   });
+      // }
+
       this.setState(prevState => ({
         images: [...prevState.images, ...response.data.hits],
         page: prevState.page + 1,
@@ -89,8 +110,8 @@ export class App extends Component {
   };
 
   render() {
-    console.log(this.state);
-    const { images, isLoading } = this.state;
+    // console.log(this.state);
+    const { images, isLoading, showLoadMoreBtn } = this.state;
     return (
       <StyledApp>
         <GlobalStyle />
@@ -98,6 +119,7 @@ export class App extends Component {
           onSubmit={this.fetchImages}
           onLoagMoreClick={this.onLoagMoreClick}
           items={images}
+          showLoadMoreBtn={showLoadMoreBtn}
         />
         {isLoading && <Loader />}
 

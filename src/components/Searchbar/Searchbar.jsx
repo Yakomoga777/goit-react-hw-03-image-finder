@@ -20,26 +20,25 @@ export class Searchbar extends Component {
   };
 
   onSubmit = evt => {
-    const { search } = this.state;
-    console.log('search -', search);
+    const search = this.state.search.trim();
+
     evt.preventDefault();
     this.props.onSubmit(search);
   };
 
   onLoadMoreClick = search => {
-    search = this.state.search;
-    console.log(search);
+    search = this.state.search.trim();
+
     this.props.onLoagMoreClick(search);
-    // this.fetchImages(search);
-    // this.setState({ page: 2 });
+
     console.log('Load more');
   };
 
   render() {
     const { search } = this.state;
-    // console.log(this.state);
-    const { items } = this.props;
-    console.log(items);
+
+    const { items, showLoadMoreBtn } = this.props;
+
     return (
       <>
         <StyleSearchbar>
@@ -60,7 +59,7 @@ export class Searchbar extends Component {
         </StyleSearchbar>
 
         <ImageGallery items={items} />
-        <Button onClick={this.onLoadMoreClick} />
+        {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />}
       </>
     );
   }

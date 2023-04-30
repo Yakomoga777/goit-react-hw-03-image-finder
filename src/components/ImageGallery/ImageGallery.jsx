@@ -3,8 +3,6 @@ import { ImageItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { StyledImageGallery } from './ImageGallery.styled';
 
 export function ImageGallery({ items }) {
-  console.log(items);
-
   return (
     <StyledImageGallery className="gallery">
       {items.map(item => {
