@@ -20,7 +20,7 @@ export class App extends Component {
     page: 1,
     isLoading: false,
     error: null,
-    showLoadMoreBtn: false,
+    showLoadMoreBtn: true,
   };
 
   async componentDidMount() {
