@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyledApp } from './AppStyled';
 import { Searchbar } from './Searchbar/Searchbar';
 import axios from 'axios';
-import { ImageGallery } from './ImageGallery/ImageGallery';
+// import { ImageGallery } from './ImageGallery/ImageGallery';
 import { GlobalStyle } from './Styles/GlobalStyle/GlobalStyle';
 import { Loader } from './Loader/Loader';
 // import { Button } from './Button/Button';
@@ -48,7 +48,7 @@ export class App extends Component {
 
       this.setState({
         images: response.data.hits,
-        page: this.state.page,
+        // page: this.state.page,
       });
       console.log(this.state);
     } catch (error) {
@@ -97,9 +97,10 @@ export class App extends Component {
         <Searchbar
           onSubmit={this.fetchImages}
           onLoagMoreClick={this.onLoagMoreClick}
+          items={images}
         />
         {isLoading && <Loader />}
-        <ImageGallery items={images} />
+
         {/* <Button onClick={this.onLoadMoreClick} /> */}
       </StyledApp>
     );
