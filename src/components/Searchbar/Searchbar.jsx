@@ -1,6 +1,6 @@
 import { Button } from 'components/Button/Button';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
-import { StyledImageGallery } from 'components/ImageGallery/ImageGallery.styled';
+// import { StyledImageGallery } from 'components/ImageGallery/ImageGallery.styled';
 import React, { Component } from 'react';
 import {
   StyleSearchbar,
