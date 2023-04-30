@@ -20,7 +20,7 @@ export class App extends Component {
     page: 1,
     isLoading: false,
     error: null,
-    showLoadMoreBtn: true,
+    showLoadMoreBtn: false,
   };
 
   async componentDidMount() {
@@ -38,24 +38,22 @@ export class App extends Component {
     try {
       this.setState({ isLoading: true });
       let response = await axios.get(
-        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=${1}`
+        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=1`
       );
 
       console.log('Відправили пошуковий запит');
 
       console.log('Отримали відповідь -', response.data);
-      // console.log(Math.floor(response.data.totalHits / perPage));
 
-      // this.setState(prevState => {
-      //   if (
-      //     Math.floor(response.data.totalHits / perPage) >
-      //     prevState.page + 1
-      //   ) {
-      //     this.setState({
-      //       showLoadMoreBtn: true,
-      //     });
-      //   }
-      // });
+      console.log(Math.floor(response.data.totalHits / perPage));
+      if (
+        response.data.totalHits < (this.state.page + 1) * perPage ||
+        response.data.hits === []
+      ) {
+        this.setState({ page: 1, showLoadMoreBtn: false });
+      } else {
+        this.setState({ page: 1, showLoadMoreBtn: true });
+      }
 
       this.setState({
         images: response.data.hits,
@@ -70,7 +68,6 @@ export class App extends Component {
       }, 500);
     }
   };
-  //  this.setState(prevState => ({ page: prevState.page + 1 }));
 
   onLoagMoreClick = async search => {
     if (this.state.error) {
@@ -84,15 +81,16 @@ export class App extends Component {
         }`
       );
 
-      // if (response.data.totalHits > this.state.page * perPage) {
-      //   this.setState({
-      //     showLoadMoreBtn: true,
-      //   });
-      // } else {
-      //   this.setState({
-      //     showLoadMoreBtn: false,
-      //   });
-      // }
+      if (response.data.totalHits > (this.state.page + 1) * perPage) {
+        console.log(this.state.page);
+        this.setState({
+          showLoadMoreBtn: true,
+        });
+      } else {
+        this.setState({
+          showLoadMoreBtn: false,
+        });
+      }
 
       this.setState(prevState => ({
         images: [...prevState.images, ...response.data.hits],
