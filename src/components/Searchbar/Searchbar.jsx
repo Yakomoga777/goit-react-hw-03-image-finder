@@ -19,6 +19,7 @@ export class Searchbar extends Component {
 
   onSubmit = evt => {
     const { search } = this.state;
+    console.log('search -', search);
     evt.preventDefault();
     this.props.onSubmit(search);
   };

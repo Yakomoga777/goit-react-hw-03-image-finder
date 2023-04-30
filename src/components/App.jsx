@@ -19,10 +19,12 @@ export class App extends Component {
     images: [],
     page: 1,
     isLoading: false,
+    error: null,
   };
 
   async componentDidMount() {
     console.log('Змонтовано');
+    // this.onLoagMoreClick();
     // this.fetchImages();
   }
 
@@ -31,17 +33,22 @@ export class App extends Component {
     // this.fetchImages();
   }
 
-  fetchImages = async (search, page = this.state.page) => {
+  fetchImages = async search => {
+    if (this.state.error) {
+      this.setState({ error: null });
+    }
     try {
       this.setState({ isLoading: true });
       const response = await axios.get(
-        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=${this.state.page}`
+        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=${1}`
       );
       console.log('Відправили пошуковий запит');
 
       console.log('Отримали відповідь -', response.data.hits);
+
       this.setState({
         images: response.data.hits,
+        page: this.state.page,
       });
       console.log(this.state);
     } catch (error) {
@@ -52,13 +59,33 @@ export class App extends Component {
       }, 500);
     }
   };
+  //  this.setState(prevState => ({ page: prevState.page + 1 }));
 
-  onLoagMoreClick = search => {
-    const page = this.setState(prevState => ({ page: prevState.page + 1 }));
+  onLoagMoreClick = async search => {
+    if (this.state.error) {
+      this.setState({ error: null });
+    }
+    try {
+      this.setState({ isLoading: true });
+      const response = await axios.get(
+        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=${
+          this.state.page + 1
+        }`
+      );
 
-    this.fetchImages(search, page);
-    // console.log('Load more 2 ', search);
-    // console.log();
+      this.setState(prevState => ({
+        images: [...prevState.images, ...response.data.hits],
+        page: prevState.page + 1,
+      }));
+      // this.setState({ page: this.state.page + 1 });
+      console.log(this.state);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTimeout(() => {
+        this.setState({ isLoading: false });
+      }, 500);
+    }
   };
 
   render() {
