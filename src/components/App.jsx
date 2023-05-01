@@ -5,6 +5,7 @@ import axios from 'axios';
 // import { ImageGallery } from './ImageGallery/ImageGallery';
 import { GlobalStyle } from './Styles/GlobalStyle/GlobalStyle';
 import { Loader } from './Loader/Loader';
+import Modal from './Modal/Modal';
 // import { Button } from './Button/Button';
 
 axios.defaults.baseURL = 'https://pixabay.com/api';
@@ -21,6 +22,7 @@ export class App extends Component {
     isLoading: false,
     error: null,
     showLoadMoreBtn: false,
+    showModal: false,
   };
 
   async componentDidMount() {
@@ -107,20 +109,37 @@ export class App extends Component {
     }
   };
 
+  onPicture = index => {
+    console.log(index);
+    const { images } = this.state;
+    const picture = images.filter(image => image.id === +index);
+    console.log(picture[0].largeImageURL);
+    this.toogleModal();
+    return toString(picture[0].largeImageURL);
+  };
+
+  toogleModal = () => {
+    this.setState(prevState => ({ showModal: !prevState.showModal }));
+  };
+
   render() {
-    // console.log(this.state);
-    const { images, isLoading, showLoadMoreBtn } = this.state;
+    console.log(this.state);
+    const { images, isLoading, showLoadMoreBtn, showModal } = this.state;
     return (
       <StyledApp>
+        <Modal showModal={showModal}>
+          {<img src={this.onPicture} alt={this.alt}></img>}
+          {/* <p>Привіт</p> */}
+        </Modal>
         <GlobalStyle />
         <Searchbar
           onSubmit={this.fetchImages}
           onLoagMoreClick={this.onLoagMoreClick}
           items={images}
           showLoadMoreBtn={showLoadMoreBtn}
+          onPicture={this.onPicture}
         />
         {isLoading && <Loader />}
-
         {/* <Button onClick={this.onLoadMoreClick} /> */}
       </StyledApp>
     );

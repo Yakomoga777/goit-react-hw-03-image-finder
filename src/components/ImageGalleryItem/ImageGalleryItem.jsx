@@ -1,13 +1,44 @@
 import React from 'react';
+import { Component } from 'react';
 import { StyledImageItem, StyledImageItemImg } from './ImageGalleryItem.styled';
 
-export function ImageItem({ item }) {
-  return (
-    <StyledImageItem className="gallery-item">
-      <StyledImageItemImg
-        src={item.webformatURL}
-        alt={item.tags}
-      ></StyledImageItemImg>
-    </StyledImageItem>
-  );
+export class ImageItem extends Component {
+  onImageClick = evt => {
+    const id = evt.currentTarget.id;
+    this.props.onPicture(id);
+  };
+
+  render() {
+    const { item } = this.props;
+
+    return (
+      <StyledImageItem className="gallery-item">
+        <StyledImageItemImg
+          src={item.webformatURL}
+          alt={item.tags}
+          onClick={this.onImageClick}
+          id={item.id}
+        ></StyledImageItemImg>
+      </StyledImageItem>
+    );
+  }
 }
+
+// const onImageClick = evt => {
+//   const id = evt.currentTarget.id;
+//   console.log(this.props.onModal(id));
+//   // console.log(id);
+// };
+
+// export function ImageItem({ item, onModal }) {
+//   return (
+//     <StyledImageItem className="gallery-item">
+//       <StyledImageItemImg
+//         src={item.webformatURL}
+//         alt={item.tags}
+//         onClick={onImageClick}
+//         id={item.id}
+//       ></StyledImageItemImg>
+//     </StyledImageItem>
+//   );
+// }

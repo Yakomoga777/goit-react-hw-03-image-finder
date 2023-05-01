@@ -37,7 +37,7 @@ export class Searchbar extends Component {
   render() {
     const { search } = this.state;
 
-    const { items, showLoadMoreBtn } = this.props;
+    const { items, showLoadMoreBtn, onPicture } = this.props;
 
     return (
       <>
@@ -58,7 +58,7 @@ export class Searchbar extends Component {
           </StyleSearchForm>
         </StyleSearchbar>
 
-        <ImageGallery items={items} />
+        <ImageGallery items={items} onPicture={onPicture} />
         {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />}
       </>
     );
