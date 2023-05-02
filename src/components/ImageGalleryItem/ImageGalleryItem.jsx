@@ -23,22 +23,3 @@ export class ImageItem extends Component {
     );
   }
 }
-
-// const onImageClick = evt => {
-//   const id = evt.currentTarget.id;
-//   console.log(this.props.onModal(id));
-//   // console.log(id);
-// };
-
-// export function ImageItem({ item, onModal }) {
-//   return (
-//     <StyledImageItem className="gallery-item">
-//       <StyledImageItemImg
-//         src={item.webformatURL}
-//         alt={item.tags}
-//         onClick={onImageClick}
-//         id={item.id}
-//       ></StyledImageItemImg>
-//     </StyledImageItem>
-//   );
-// }

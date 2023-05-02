@@ -5,7 +5,7 @@ import axios from 'axios';
 // import { ImageGallery } from './ImageGallery/ImageGallery';
 import { GlobalStyle } from './Styles/GlobalStyle/GlobalStyle';
 import { Loader } from './Loader/Loader';
-import Modal from './Modal/Modal';
+import { Modal } from './Modal/Modal';
 // import { Button } from './Button/Button';
 
 axios.defaults.baseURL = 'https://pixabay.com/api';
@@ -23,6 +23,7 @@ export class App extends Component {
     error: null,
     showLoadMoreBtn: false,
     showModal: false,
+    largeImageURL: '',
   };
 
   async componentDidMount() {
@@ -43,11 +44,8 @@ export class App extends Component {
         `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=1`
       );
 
-      console.log('Відправили пошуковий запит');
+      // console.log('Відправили пошуковий запит');
 
-      console.log('Отримали відповідь -', response.data);
-
-      console.log(Math.floor(response.data.totalHits / perPage));
       if (
         response.data.totalHits < (this.state.page + 1) * perPage ||
         response.data.hits === []
@@ -59,9 +57,7 @@ export class App extends Component {
 
       this.setState({
         images: response.data.hits,
-        // page: this.state.page,
       });
-      console.log(this.state);
     } catch (error) {
       console.error(error);
     } finally {
@@ -84,7 +80,6 @@ export class App extends Component {
       );
 
       if (response.data.totalHits > (this.state.page + 1) * perPage) {
-        console.log(this.state.page);
         this.setState({
           showLoadMoreBtn: true,
         });
@@ -98,7 +93,7 @@ export class App extends Component {
         images: [...prevState.images, ...response.data.hits],
         page: prevState.page + 1,
       }));
-      // this.setState({ page: this.state.page + 1 });
+
       console.log(this.state);
     } catch (error) {
       console.error(error);
@@ -110,12 +105,11 @@ export class App extends Component {
   };
 
   onPicture = index => {
-    console.log(index);
     const { images } = this.state;
     const picture = images.filter(image => image.id === +index);
-    console.log(picture[0].largeImageURL);
+
     this.toogleModal();
-    return toString(picture[0].largeImageURL);
+    this.setState({ largeImageURL: picture[0].largeImageURL });
   };
 
   toogleModal = () => {
@@ -123,14 +117,15 @@ export class App extends Component {
   };
 
   render() {
-    console.log(this.state);
-    const { images, isLoading, showLoadMoreBtn, showModal } = this.state;
+    const { images, isLoading, showLoadMoreBtn, showModal, largeImageURL } =
+      this.state;
     return (
       <StyledApp>
-        <Modal showModal={showModal}>
-          {<img src={this.onPicture} alt={this.alt}></img>}
-          {/* <p>Привіт</p> */}
-        </Modal>
+        {showModal && (
+          <Modal onCloseModal={this.toogleModal}>
+            {<img src={largeImageURL} alt={this.alt}></img>}
+          </Modal>
+        )}
         <GlobalStyle />
         <Searchbar
           onSubmit={this.fetchImages}
@@ -140,7 +135,6 @@ export class App extends Component {
           onPicture={this.onPicture}
         />
         {isLoading && <Loader />}
-        {/* <Button onClick={this.onLoadMoreClick} /> */}
       </StyledApp>
     );
   }
