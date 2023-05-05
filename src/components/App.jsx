@@ -68,6 +68,8 @@ export class App extends Component {
   };
 
   onLoagMoreClick = async search => {
+    console.log(search);
+
     if (this.state.error) {
       this.setState({ error: null });
     }
@@ -78,7 +80,7 @@ export class App extends Component {
           this.state.page + 1
         }`
       );
-
+      console.log(response, this.state.images);
       if (response.data.totalHits > (this.state.page + 1) * perPage) {
         this.setState({
           showLoadMoreBtn: true,
@@ -104,21 +106,22 @@ export class App extends Component {
     }
   };
 
-  onPicture = index => {
-    const { images } = this.state;
-    const picture = images.filter(image => image.id === +index);
+  // onPicture = index => {
+  //   const { images } = this.state;
+  //   const picture = images.filter(image => image.id === +index);
 
-    this.toogleModal();
-    this.setState({ largeImageURL: picture[0].largeImageURL });
-  };
+  //   this.toogleModal();
+  //   this.setState({ largeImageURL: picture[0].largeImageURL });
+  // };
 
-  toogleModal = () => {
-    this.setState(prevState => ({ showModal: !prevState.showModal }));
-  };
+  // toogleModal = () => {
+  //   this.setState(prevState => ({ showModal: !prevState.showModal }));
+  // };
 
   render() {
     const { images, isLoading, showLoadMoreBtn, showModal, largeImageURL } =
       this.state;
+    console.log(this.state.images);
     return (
       <StyledApp>
         {showModal && (
