@@ -29,13 +29,15 @@ export class Searchbar extends Component {
 
   onSubmit = evt => {
     const searchQuery = this.state.searchQuery.trim();
-    // console.log(evt, searchQuery);
+    console.log(evt, searchQuery);
 
     evt.preventDefault();
     this.props.onSubmit(searchQuery);
   };
 
-  onLoadMoreClick = searchQuery => {
+  onLoadMoreClick = (evt, searchQuery) => {
+    console.log(evt);
+
     searchQuery = this.state.searchQuery;
 
     this.props.onLoagMoreClick(searchQuery);
@@ -67,7 +69,7 @@ export class Searchbar extends Component {
 
         <ImageGallery items={items} onPicture={onPicture} />
         {/* {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />} */}
-        <Button onClick={this.onLoadMoreClick} />
+        <Button type="button" onClick={evt => this.onLoadMoreClick(evt)} />
       </>
     );
   }
