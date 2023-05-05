@@ -12,24 +12,33 @@ import {
 
 export class Searchbar extends Component {
   state = {
-    search: '',
+    searchQuery: '',
   };
 
+  componentDidMount() {
+    console.log('Змонтовано');
+  }
+
+  componentDidUpdate() {
+    // console.log('Апдейт');
+  }
+
   handleInputChange = evt => {
-    this.setState({ search: evt.target.value });
+    this.setState({ searchQuery: evt.target.value });
   };
 
   onSubmit = evt => {
-    const search = this.state.search.trim();
+    const searchQuery = this.state.searchQuery.trim();
+    // console.log(evt, searchQuery);
 
     evt.preventDefault();
-    this.props.onSubmit(search);
+    this.props.onSubmit(searchQuery);
   };
 
-  onLoadMoreClick = search => {
-    search = this.state.search.trim();
+  onLoadMoreClick = searchQuery => {
+    searchQuery = this.state.searchQuery;
 
-    this.props.onLoagMoreClick(search);
+    this.props.onLoagMoreClick(searchQuery);
   };
 
   render() {
@@ -57,7 +66,8 @@ export class Searchbar extends Component {
         </StyleSearchbar>
 
         <ImageGallery items={items} onPicture={onPicture} />
-        {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />}
+        {/* {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />} */}
+        <Button onClick={this.onLoadMoreClick} />
       </>
     );
   }
