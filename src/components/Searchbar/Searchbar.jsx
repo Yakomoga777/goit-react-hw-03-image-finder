@@ -40,7 +40,7 @@ export class Searchbar extends Component {
 
     searchQuery = this.state.searchQuery;
 
-    this.props.onLoagMoreClick(searchQuery);
+    this.props.onLoadMoreClick(searchQuery);
   };
 
   render() {
@@ -69,7 +69,7 @@ export class Searchbar extends Component {
 
         <ImageGallery items={items} onPicture={onPicture} />
         {/* {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />} */}
-        <Button type="button" onClick={evt => this.onLoadMoreClick(evt)} />
+        <Button type="button" onClick={this.onLoadMoreClick} />
       </>
     );
   }

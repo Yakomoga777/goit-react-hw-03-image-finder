@@ -67,7 +67,7 @@ export class App extends Component {
     }
   };
 
-  onLoagMoreClick = async search => {
+  onLoadMoreClick = async search => {
     console.log(search);
 
     if (this.state.error) {
@@ -132,7 +132,7 @@ export class App extends Component {
         <GlobalStyle />
         <Searchbar
           onSubmit={this.fetchImages}
-          onLoagMoreClick={this.onLoagMoreClick}
+          onLoadMoreClick={this.onLoadMoreClick}
           items={images}
           showLoadMoreBtn={showLoadMoreBtn}
           onPicture={this.onPicture}
