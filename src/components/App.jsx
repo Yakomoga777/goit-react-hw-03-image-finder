@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import { StyledApp } from './AppStyled';
 import { Searchbar } from './Searchbar/Searchbar';
-import axios from 'axios';
-// import { ImageGallery } from './ImageGallery/ImageGallery';
+
+import { fetchImages } from 'services/api';
 import { GlobalStyle } from './Styles/GlobalStyle/GlobalStyle';
 import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
-// import { Button } from './Button/Button';
 
-axios.defaults.baseURL = 'https://pixabay.com/api';
-const KEY_API = '34395621-a4ae5341feaa95111ecdda581';
-// const search = 'yellow+flower';
 const perPage = 12;
 
 //* render > didMount > getItem > setState > update > render > didUpdate > setItem
@@ -24,104 +20,96 @@ export class App extends Component {
     showLoadMoreBtn: false,
     showModal: false,
     largeImageURL: '',
+    searchQuery: '',
   };
 
-  async componentDidMount() {
-    console.log('Змонтовано');
-  }
+  async componentDidUpdate(prevProps, prevState) {
+    const { searchQuery, page } = this.state;
 
-  async componentDidUpdate() {
-    console.log('Апдейт');
-  }
+    if (prevState.searchQuery !== searchQuery) {
+      try {
+        this.setState({ isLoading: true });
 
-  fetchImages = async search => {
-    if (this.state.error) {
-      this.setState({ error: null });
+        const response = await fetchImages(searchQuery, page, perPage);
+        this.setState({ images: response.data.hits });
+
+        // Перевірка на кнопку
+        if (response.data.totalHits > perPage) {
+          this.setState({
+            showLoadMoreBtn: true,
+          });
+        }
+      } catch (error) {
+      } finally {
+        setTimeout(() => {
+          this.setState({ isLoading: false });
+        }, 1000);
+      }
     }
-    try {
-      this.setState({ isLoading: true });
-      let response = await axios.get(
-        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=1`
-      );
+    if (prevState.searchQuery === searchQuery && prevState.page !== page) {
+      try {
+        this.setState({ isLoading: true });
 
-      // console.log('Відправили пошуковий запит');
+        const response = await fetchImages(searchQuery, page, perPage);
+        this.setState(prevState => ({
+          images: [...prevState.images, ...response.data.hits],
+          page: this.state.page,
+        }));
+        console.log(response);
 
-      if (
-        response.data.totalHits < (this.state.page + 1) * perPage ||
-        response.data.hits === []
-      ) {
-        this.setState({ page: 1, showLoadMoreBtn: false });
-      } else {
-        this.setState({ page: 1, showLoadMoreBtn: true });
+        // Перевірка на кнопку
+        if (response.data.totalHits > this.state.page * perPage) {
+          this.setState({
+            showLoadMoreBtn: true,
+          });
+        } else {
+          this.setState({
+            showLoadMoreBtn: false,
+          });
+        }
+      } catch (error) {
+      } finally {
+        setTimeout(() => {
+          this.setState({ isLoading: false });
+        }, 1000);
       }
 
-      this.setState({
-        images: response.data.hits,
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setTimeout(() => {
-        this.setState({ isLoading: false });
-      }, 500);
+      console.log('Апдейт PAGE');
+    } else if (
+      prevState.searchQuery !== searchQuery &&
+      prevState.page !== page
+    ) {
+      console.log('Привіт');
     }
+  }
+
+  onSubmit = search => {
+    this.setState({ searchQuery: search, page: 1 });
   };
 
   onLoadMoreClick = async search => {
     console.log(search);
-
-    if (this.state.error) {
-      this.setState({ error: null });
-    }
-    try {
-      this.setState({ isLoading: true });
-      const response = await axios.get(
-        `/?key=${KEY_API}&q=${search}&image_type=photo&per_page=${perPage}&page=${
-          this.state.page + 1
-        }`
-      );
-      console.log(response, this.state.images);
-      if (response.data.totalHits > (this.state.page + 1) * perPage) {
-        this.setState({
-          showLoadMoreBtn: true,
-        });
-      } else {
-        this.setState({
-          showLoadMoreBtn: false,
-        });
-      }
-
-      this.setState(prevState => ({
-        images: [...prevState.images, ...response.data.hits],
-        page: prevState.page + 1,
-      }));
-
-      console.log(this.state);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setTimeout(() => {
-        this.setState({ isLoading: false });
-      }, 500);
-    }
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
-  // onPicture = index => {
-  //   const { images } = this.state;
-  //   const picture = images.filter(image => image.id === +index);
+  onPicture = index => {
+    const { images } = this.state;
+    const picture = images.filter(image => image.id === +index);
 
-  //   this.toogleModal();
-  //   this.setState({ largeImageURL: picture[0].largeImageURL });
-  // };
+    this.toogleModal();
+    this.setState({ largeImageURL: picture[0].largeImageURL });
+  };
 
-  // toogleModal = () => {
-  //   this.setState(prevState => ({ showModal: !prevState.showModal }));
-  // };
+  toogleModal = () => {
+    this.setState(prevState => ({ showModal: !prevState.showModal }));
+  };
 
   render() {
     const { images, isLoading, showLoadMoreBtn, showModal, largeImageURL } =
       this.state;
-    console.log(this.state.images);
+
     return (
       <StyledApp>
         {showModal && (
@@ -131,7 +119,7 @@ export class App extends Component {
         )}
         <GlobalStyle />
         <Searchbar
-          onSubmit={this.fetchImages}
+          onSubmit={this.onSubmit}
           onLoadMoreClick={this.onLoadMoreClick}
           items={images}
           showLoadMoreBtn={showLoadMoreBtn}

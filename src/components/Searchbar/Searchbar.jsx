@@ -15,13 +15,13 @@ export class Searchbar extends Component {
     searchQuery: '',
   };
 
-  componentDidMount() {
-    console.log('Змонтовано');
-  }
+  // componentDidMount() {
+  //   console.log('Змонтовано');
+  // }
 
-  componentDidUpdate() {
-    // console.log('Апдейт');
-  }
+  // componentDidUpdate() {
+  //   // console.log('Апдейт');
+  // }
 
   handleInputChange = evt => {
     this.setState({ searchQuery: evt.target.value });
@@ -29,16 +29,14 @@ export class Searchbar extends Component {
 
   onSubmit = evt => {
     const searchQuery = this.state.searchQuery.trim();
-    console.log(evt, searchQuery);
 
     evt.preventDefault();
     this.props.onSubmit(searchQuery);
   };
 
-  onLoadMoreClick = (evt, searchQuery) => {
-    console.log(evt);
-
+  onLoadMoreClick = searchQuery => {
     searchQuery = this.state.searchQuery;
+    console.log(searchQuery);
 
     this.props.onLoadMoreClick(searchQuery);
   };
@@ -68,8 +66,8 @@ export class Searchbar extends Component {
         </StyleSearchbar>
 
         <ImageGallery items={items} onPicture={onPicture} />
-        {/* {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />} */}
-        <Button type="button" onClick={this.onLoadMoreClick} />
+        {showLoadMoreBtn && <Button onClick={this.onLoadMoreClick} />}
+        {/* <Button type="button" onClick={this.onLoadMoreClick} /> */}
       </>
     );
   }
